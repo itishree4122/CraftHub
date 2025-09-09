@@ -1,0 +1,462 @@
+import React, { useState, useRef } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  Platform,
+  StatusBar,
+  Modal,
+  Animated,
+  PanResponder,
+  Alert,
+  ToastAndroid
+} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import AppStyles from './StyleSheet/AppStyles';
+
+const Product = ({ route, navigation }) => {
+  const { product } = route.params;
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [zoomModalVisible, setZoomModalVisible] = useState(false);
+  const [selectedColor, setSelectedColor] = useState(product.colors ? product.colors[0] : null);
+  const [selectedSize, setSelectedSize] = useState(product.sizes ? product.sizes[0] : null);
+  const [activeTab, setActiveTab] = useState('description'); // State for active tab
+  const [isWishlisted, setIsWishlisted] = useState(false); // Wishlist state
+  
+  // For pinch-to-zoom functionality
+  const scale = useRef(new Animated.Value(1)).current;
+  const translateX = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(0)).current;
+
+  // Mock multiple images for the product
+  const productImages = [
+    product.image,
+    'https://via.placeholder.com/400x400/FF5733/FFFFFF?text=Product+Angle+2',
+    'https://via.placeholder.com/400x400/C70039/FFFFFF?text=Product+Angle+3',
+    'https://via.placeholder.com/400x400/900C3F/FFFFFF?text=Making+Process'
+  ];
+
+  // Mock product details
+  const productDetails = {
+    makingProcess: "Each piece is carefully handcrafted using traditional techniques passed down through generations. The process involves meticulous attention to detail at every stage, from material selection to final finishing.",
+    makingTime: "Approximately 3-4 weeks",
+    materials: "High-quality clay, natural dyes, and traditional sealants",
+  };
+
+  // PanResponder for zoom functionality
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (evt, gestureState) => {
+        if (gestureState.numberActiveTouches === 2) {
+          // Pinch gesture
+          const { dx, dy } = gestureState;
+          // Calculate scale based on pinch distance
+          // This is a simplified implementation
+          Animated.event([null, { scale: scale }], { useNativeDriver: false })(
+            evt,
+            gestureState
+          );
+        } else if (gestureState.numberActiveTouches === 1 && scale._value > 1) {
+          // Drag gesture only when zoomed
+          translateX.setValue(gestureState.dx);
+          translateY.setValue(gestureState.dy);
+        }
+      },
+      onPanResponderRelease: () => {
+        // Reset values if needed
+        if (scale._value < 1) {
+          Animated.spring(scale, { toValue: 1, useNativeDriver: false }).start();
+        }
+        Animated.spring(translateX, { toValue: 0, useNativeDriver: false }).start();
+        Animated.spring(translateY, { toValue: 0, useNativeDriver: false }).start();
+      },
+    })
+  ).current;
+
+
+  const openZoomModal = () => {
+    setZoomModalVisible(true);
+  };
+
+  const closeZoomModal = () => {
+    setZoomModalVisible(false);
+    // Reset zoom and pan
+    scale.setValue(1);
+    translateX.setValue(0);
+    translateY.setValue(0);
+  };
+
+  const navigateToArtisanProfile = () => {
+    // Navigate to artisan profile screen
+    navigation.navigate('ArtisanProfile', { artisan: product.artisan });
+  };
+
+  const toggleWishlist = () => {
+    const newWishlistStatus = !isWishlisted;
+    setIsWishlisted(newWishlistStatus);
+    
+    // Show confirmation message
+    const message = newWishlistStatus ? 'Added to wishlist!' : 'Removed from wishlist!';
+    
+    if (Platform.OS === 'android') {
+      ToastAndroid.show(message, ToastAndroid.SHORT);
+    } else {
+      Alert.alert('Success', message);
+    }
+    
+    // Here you would typically update the wishlist in your state/context
+    // For example:
+    // if (newWishlistStatus) {
+    //   addToWishlistContext(product);
+    // } else {
+    //   removeFromWishlistContext(product.id);
+    // }
+  };
+
+  const addToCart = () => {
+    // Show confirmation message
+    if (Platform.OS === 'android') {
+      ToastAndroid.show('Item added to cart successfully!', ToastAndroid.SHORT);
+    } else {
+      Alert.alert('Success', 'Item added to cart successfully!');
+    }
+    
+    // Here you would typically add the item to your cart state/context
+    // For example:
+    // const cartItem = {
+    //   ...product,
+    //   quantity,
+    //   selectedColor,
+    //   selectedSize,
+    //   id: Date.now().toString()
+    // };
+    // addToCartContext(cartItem);
+  };
+
+  const buyNow = () => {
+    // Create the cart item with all selected options
+    const cartItem = {
+      ...product,
+      quantity,
+      selectedColor,
+      selectedSize,
+      id: Date.now().toString()
+    };
+    
+    // Navigate directly to Checkout with this single item
+    navigation.navigate('Checkout', {
+      cartItems: [cartItem],
+      subtotal: product.price * quantity,
+      tax: (product.price * quantity) * 0.1,
+      deliveryCharge: 50,
+      total: (product.price * quantity) + ((product.price * quantity) * 0.1) + 50
+    });
+  };
+
+  // Render content based on active tab
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'description':
+        return (
+          <Text style={AppStyles.productDescription}>
+            Handcrafted with precision and care by skilled artisans. {product.name} is made from 
+            high-quality materials ensuring durability and aesthetic appeal. This piece showcases 
+            traditional craftsmanship with a modern touch, perfect for adding elegance to any space.
+          </Text>
+        );
+      case 'process':
+        return (
+          <View>
+            <Text style={AppStyles.productDescription}>
+              {productDetails.makingProcess}
+            </Text>
+            <Text style={[AppStyles.productSectionTitle, {marginTop: 16}]}>Making Time</Text>
+            <Text style={AppStyles.productDescription}>
+              {productDetails.makingTime}
+            </Text>
+          </View>
+        );
+      case 'materials':
+        return (
+          <Text style={AppStyles.productDescription}>
+            {productDetails.materials}
+          </Text>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <View style={AppStyles.container}>
+      {/* Header */}
+      <View style={AppStyles.headerContainer}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 4 }}>
+            <Icon name="arrow-back" size={24} color="#333" />
+          </TouchableOpacity>
+          <Text style={[AppStyles.profileHeaderTitle, { fontSize: 18 }]} numberOfLines={1}>
+            Product Details
+          </Text>
+          <TouchableOpacity 
+            style={{ padding: 4 }}
+            onPress={toggleWishlist}
+          >
+            <Icon 
+              name={isWishlisted ? "favorite" : "favorite-border"} 
+              size={24} 
+              color={isWishlisted ? "#ff3b30" : "#333"} 
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Product Images */}
+        <View style={AppStyles.productImageContainer}>
+          <TouchableOpacity onPress={openZoomModal} activeOpacity={0.9}>
+            <Image 
+              source={{ uri: productImages[selectedImage] }} 
+              style={AppStyles.productMainImage}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
+          
+          {/* Authenticity Badge */}
+          <View style={AppStyles.authenticityBadge}>
+            <Icon name="verified" size={16} color="#fff" />
+            <Text style={AppStyles.authenticityText}>Handmade Authentic</Text>
+          </View>
+          
+          {/* Image Thumbnails */}
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            style={AppStyles.productThumbnailContainer}
+          >
+            {productImages.map((image, index) => (
+              <TouchableOpacity 
+                key={index} 
+                onPress={() => setSelectedImage(index)}
+                style={[
+                  AppStyles.productThumbnail,
+                  selectedImage === index && AppStyles.productSelectedThumbnail
+                ]}
+              >
+                <Image 
+                  source={{ uri: image }} 
+                  style={AppStyles.productThumbnailImage}
+                  resizeMode="cover"
+                />
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Product Details */}
+        <View style={AppStyles.productDetailsContainer}>
+          <Text style={AppStyles.productName}>{product.name}</Text>
+          
+          {/* Rating and Reviews */}
+          <View style={AppStyles.productRatingContainer}>
+            <View style={AppStyles.productRatingBadge}>
+              <Text style={AppStyles.productRatingText}>{product.rating}</Text>
+              <Icon name="star" size={14} color="#fff" />
+            </View>
+            <Text style={AppStyles.productReviewText}>({product.reviews} reviews)</Text>
+            <Text style={AppStyles.productSoldText}>• 1.2k+ sold</Text>
+          </View>
+
+          {/* Price */}
+          <Text style={AppStyles.productPrice}>₹{product.price.toLocaleString('en-IN')}</Text>
+
+          
+
+          {/* Color Options (if applicable) */}
+          {product.colors && (
+            <>
+              <Text style={AppStyles.productSectionTitle}>Color</Text>
+              <View style={AppStyles.productOptionsContainer}>
+                {product.colors.map((color, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => setSelectedColor(color)}
+                    style={[
+                      AppStyles.colorOption,
+                      selectedColor === color && AppStyles.selectedColorOption,
+                      { backgroundColor: color.value }
+                    ]}
+                  >
+                    {selectedColor === color && (
+                      <Icon name="check" size={16} color="#fff" />
+                    )}
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </>
+          )}
+
+          {/* Size Options (if applicable) */}
+          {product.sizes && (
+            <>
+              <Text style={AppStyles.productSectionTitle}>Size</Text>
+              <View style={AppStyles.productOptionsContainer}>
+                {product.sizes.map((size, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => setSelectedSize(size)}
+                    style={[
+                      AppStyles.sizeOption,
+                      selectedSize === size && AppStyles.selectedSizeOption
+                    ]}
+                  >
+                    <Text style={[
+                      AppStyles.sizeOptionText,
+                      selectedSize === size && AppStyles.selectedSizeOptionText
+                    ]}>
+                      {size}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </>
+          )}
+
+          {/* Tab Buttons - Horizontal Scroll */}
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            style={{ marginVertical: 20, marginHorizontal: -7, }}
+            contentContainerStyle={{ paddingHorizontal: 0 }}
+          >
+            <TouchableOpacity 
+              style={[
+                AppStyles.tabButtonHorizontal,
+                activeTab === 'description' && AppStyles.activeTabButtonHorizontal
+              ]}
+              onPress={() => setActiveTab('description')}
+            >
+              <Text style={[
+                AppStyles.tabButtonTextHorizontal,
+                activeTab === 'description' && AppStyles.activeTabButtonTextHorizontal
+              ]}>
+                Description
+              </Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={[
+                AppStyles.tabButtonHorizontal,
+                activeTab === 'process' && AppStyles.activeTabButtonHorizontal
+              ]}
+              onPress={() => setActiveTab('process')}
+            >
+              <Text style={[
+                AppStyles.tabButtonTextHorizontal,
+                activeTab === 'process' && AppStyles.activeTabButtonTextHorizontal
+              ]}>
+                Making Process
+              </Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={[
+                AppStyles.tabButtonHorizontal,
+                activeTab === 'materials' && AppStyles.activeTabButtonHorizontal
+              ]}
+              onPress={() => setActiveTab('materials')}
+            >
+              <Text style={[
+                AppStyles.tabButtonTextHorizontal,
+                activeTab === 'materials' && AppStyles.activeTabButtonTextHorizontal
+              ]}>
+                Materials Used
+              </Text>
+            </TouchableOpacity>
+          </ScrollView>
+
+          {/* Tab Content */}
+          {renderTabContent()}
+
+          {/* Artisan Info */}
+          <Text style={[AppStyles.productSectionTitle, {marginTop: 24}]}>Artisan's Story</Text>
+          <TouchableOpacity 
+            style={AppStyles.productArtisanContainer}
+            onPress={navigateToArtisanProfile}
+          >
+            <Image 
+              source={{ uri: 'https://via.placeholder.com/60x60/007AFF/FFFFFF?text=A' }} 
+              style={AppStyles.productArtisanImage}
+            />
+            <View style={AppStyles.productArtisanInfo}>
+              <Text style={AppStyles.productArtisanName}>{product.artisan}</Text>
+              <Text style={AppStyles.productArtisanLocation}>Jaipur, Rajasthan</Text>
+              <Text style={AppStyles.productArtisanYears}>15 years of experience</Text>
+              <Text style={AppStyles.productArtisanStory}>
+                Specializing in traditional pottery techniques passed down through three generations...
+              </Text>
+              <Text style={AppStyles.viewProfileText}>View Full Profile →</Text>
+            </View>
+          </TouchableOpacity>
+
+          
+        </View>
+      </ScrollView>
+
+      {/* Footer with Buy Options */}
+      <View style={AppStyles.productFooter}>
+        <TouchableOpacity 
+          style={AppStyles.productCartButton}
+          onPress={addToCart}
+        >
+          <Icon name="add-shopping-cart" size={20} color="#a0522d" />
+          <Text style={AppStyles.productCartButtonText}>Add to Cart</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={AppStyles.productBuyButton}
+          onPress={buyNow}
+        >
+          <Text style={AppStyles.productBuyButtonText}>Buy Now</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Zoom Modal */}
+      <Modal
+        visible={zoomModalVisible}
+        transparent={true}
+        onRequestClose={closeZoomModal}
+      >
+        <View style={AppStyles.zoomModalContainer}>
+          <TouchableOpacity 
+            style={AppStyles.zoomModalCloseButton}
+            onPress={closeZoomModal}
+          >
+            <Icon name="close" size={24} color="#fff" />
+          </TouchableOpacity>
+          <Animated.Image
+            source={{ uri: productImages[selectedImage] }}
+            style={[
+              AppStyles.zoomedImage,
+              {
+                transform: [
+                  { scale: scale },
+                  { translateX: translateX },
+                  { translateY: translateY }
+                ]
+              }
+            ]}
+            resizeMode="contain"
+            {...panResponder.panHandlers}
+          />
+        </View>
+      </Modal>
+    </View>
+  );
+};
+
+export default Product;
