@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Alert,
   TextInput,
+  Animated,
+  Easing,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppStyles from './StyleSheet/AppStyles';
@@ -24,7 +26,6 @@ const Checkout = ({ navigation, route }) => {
     pincode: ''
   });
   const [isAddressSaved, setIsAddressSaved] = useState(false);
-
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [cardDetails, setCardDetails] = useState({
     cardNumber: '',
@@ -32,9 +33,14 @@ const Checkout = ({ navigation, route }) => {
     cvv: '',
     name: ''
   });
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [orderDetails, setOrderDetails] = useState(null);
+
+  // Animation values
+  const circleScale = new Animated.Value(0);
+  const checkmarkOpacity = new Animated.Value(0);
 
   const handleSaveAddress = () => {
-    // Validate address form
     if (!deliveryAddress.fullName || !deliveryAddress.phone || !deliveryAddress.address || 
         !deliveryAddress.city || !deliveryAddress.pincode) {
       Alert.alert('Error', 'Please fill all delivery address fields');
@@ -46,8 +52,26 @@ const Checkout = ({ navigation, route }) => {
     Alert.alert('Success', 'Delivery address saved successfully!');
   };
 
+  const animateSuccess = () => {
+    // Scale animation for the circle
+    Animated.timing(circleScale, {
+      toValue: 1,
+      duration: 800,
+      easing: Easing.out(Easing.back(1.2)),
+      useNativeDriver: true,
+    }).start();
+
+    // Fade in animation for the checkmark (delayed)
+    setTimeout(() => {
+      Animated.timing(checkmarkOpacity, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    }, 600);
+  };
+
   const handlePlaceOrder = () => {
-    // Validate if address is saved
     if (!isAddressSaved) {
       Alert.alert('Error', 'Please add your delivery address first');
       return;
@@ -58,17 +82,26 @@ const Checkout = ({ navigation, route }) => {
       return;
     }
 
-    // Process order
-    Alert.alert(
-      'Order Placed!',
-      'Your order has been placed successfully. You will receive a confirmation email shortly.',
-      [
-        {
-          text: 'OK',
-          onPress: () => navigation.navigate('Home')
-        }
-      ]
-    );
+    // Generate order details
+    const order = {
+      id: 'ORD' + Math.floor(Math.random() * 10000),
+      date: new Date().toISOString().split('T')[0],
+      status: 'Processing',
+      total: total,
+      paymentMethod: paymentMethod,
+      deliveryAddress: deliveryAddress,
+      items: cartItems,
+      estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 7 days from now
+    };
+
+    setOrderDetails(order);
+    setShowSuccess(true);
+    animateSuccess();
+
+    // Navigate to success page after animation completes
+    setTimeout(() => {
+      navigation.navigate('OrderSuccess', { orderDetails: order });
+    }, 2000);
   };
 
   const renderOrderItem = (item) => (
@@ -81,6 +114,34 @@ const Checkout = ({ navigation, route }) => {
       </View>
     </View>
   );
+
+  if (showSuccess) {
+    return (
+      <View style={[AppStyles.container, { justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }]}>
+        <Animated.View
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 50,
+            backgroundColor: '#4CAF50',
+            justifyContent: 'center',
+            alignItems: 'center',
+            transform: [{ scale: circleScale }],
+          }}
+        >
+          <Animated.View style={{ opacity: checkmarkOpacity }}>
+            <Icon name="check" size={50} color="#fff" />
+          </Animated.View>
+        </Animated.View>
+        <Text style={{ marginTop: 20, fontSize: 18, fontWeight: '600', color: '#333' }}>
+          Order Placed Successfully!
+        </Text>
+        <Text style={{ marginTop: 10, color: '#666', textAlign: 'center' }}>
+          Redirecting to order details...
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View style={AppStyles.container}>

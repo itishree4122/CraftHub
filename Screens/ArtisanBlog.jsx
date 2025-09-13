@@ -175,7 +175,7 @@ const ArtisanBlog = ({ navigation, route }) => {
   const renderShortVideo = ({ item }) => (
     <TouchableOpacity 
       style={AppStyles.shortVideoCard}
-      onPress={() => navigation.navigate('VideoPlayer', { video: item })}
+      onPress={() => navigation.navigate('VideoPlayer')}
     >
       <View style={AppStyles.videoThumbnailContainer}>
         <Image source={{ uri: item.thumbnail }} style={AppStyles.shortVideoThumbnail} />

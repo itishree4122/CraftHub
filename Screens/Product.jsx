@@ -12,7 +12,8 @@ import {
   Animated,
   PanResponder,
   Alert,
-  ToastAndroid
+  ToastAndroid,
+  FlatList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppStyles from './StyleSheet/AppStyles';
@@ -47,6 +48,73 @@ const Product = ({ route, navigation }) => {
     materials: "High-quality clay, natural dyes, and traditional sealants",
   };
 
+  // Mock reviews data
+  const reviewsData = [
+    {
+      id: 1,
+      user: {
+        name: "Priya Sharma",
+        avatar: "https://randomuser.me/api/portraits/women/32.jpg"
+      },
+      rating: 5,
+      date: "2 weeks ago",
+      comment: "Absolutely love this product! The craftsmanship is exceptional and it looks even better in person. The artisan's attention to detail is remarkable.",
+      photos: [
+        "https://via.placeholder.com/200x200/FF5733/FFFFFF?text=Review+1",
+        "https://via.placeholder.com/200x200/C70039/FFFFFF?text=Review+2"
+      ]
+    },
+    {
+      id: 2,
+      user: {
+        name: "Rahul Verma",
+        avatar: "https://randomuser.me/api/portraits/men/22.jpg"
+      },
+      rating: 4,
+      date: "1 month ago",
+      comment: "Good quality product. The colors are vibrant and it's well-made. Took a bit longer to arrive than expected but worth the wait.",
+      photos: [
+        "https://via.placeholder.com/200x200/900C3F/FFFFFF?text=Review+3"
+      ]
+    },
+    {
+      id: 3,
+      user: {
+        name: "Sneha Patel",
+        avatar: "https://randomuser.me/api/portraits/women/45.jpg"
+      },
+      rating: 5,
+      date: "3 weeks ago",
+      comment: "This is my second purchase from this artisan. The quality is consistently excellent. The product arrived well-packaged and in perfect condition.",
+      photos: []
+    },
+    {
+      id: 4,
+      user: {
+        name: "Amit Kumar",
+        avatar: "https://randomuser.me/api/portraits/men/67.jpg"
+      },
+      rating: 3,
+      date: "2 months ago",
+      comment: "The product is decent but I expected better finishing for the price. The concept is good but execution could be improved.",
+      photos: [
+        "https://via.placeholder.com/200x200/581845/FFFFFF?text=Review+4"
+      ]
+    }
+  ];
+
+  // Calculate average rating
+  const averageRating = reviewsData.reduce((sum, review) => sum + review.rating, 0) / reviewsData.length;
+  
+  // Calculate rating distribution
+  const ratingDistribution = {
+    5: reviewsData.filter(review => review.rating === 5).length,
+    4: reviewsData.filter(review => review.rating === 4).length,
+    3: reviewsData.filter(review => review.rating === 3).length,
+    2: reviewsData.filter(review => review.rating === 2).length,
+    1: reviewsData.filter(review => review.rating === 1).length
+  };
+
   // PanResponder for zoom functionality
   const panResponder = useRef(
     PanResponder.create({
@@ -78,7 +146,6 @@ const Product = ({ route, navigation }) => {
     })
   ).current;
 
-
   const openZoomModal = () => {
     setZoomModalVisible(true);
   };
@@ -108,14 +175,6 @@ const Product = ({ route, navigation }) => {
     } else {
       Alert.alert('Success', message);
     }
-    
-    // Here you would typically update the wishlist in your state/context
-    // For example:
-    // if (newWishlistStatus) {
-    //   addToWishlistContext(product);
-    // } else {
-    //   removeFromWishlistContext(product.id);
-    // }
   };
 
   const addToCart = () => {
@@ -125,17 +184,6 @@ const Product = ({ route, navigation }) => {
     } else {
       Alert.alert('Success', 'Item added to cart successfully!');
     }
-    
-    // Here you would typically add the item to your cart state/context
-    // For example:
-    // const cartItem = {
-    //   ...product,
-    //   quantity,
-    //   selectedColor,
-    //   selectedSize,
-    //   id: Date.now().toString()
-    // };
-    // addToCartContext(cartItem);
   };
 
   const buyNow = () => {
@@ -157,6 +205,60 @@ const Product = ({ route, navigation }) => {
       total: (product.price * quantity) + ((product.price * quantity) * 0.1) + 50
     });
   };
+
+  // Render star ratings
+  const renderStars = (rating) => {
+    return Array(5).fill(0).map((_, index) => (
+      <Icon
+        key={index}
+        name={index < rating ? "star" : "star-border"}
+        size={16}
+        color={index < rating ? "#FFD700" : "#CCC"}
+        style={{ marginRight: 2 }}
+      />
+    ));
+  };
+
+  // Render rating distribution bar
+  const renderRatingBar = (stars, count, total) => {
+    const percentage = total > 0 ? (count / total) * 100 : 0;
+    
+    return (
+      <View style={AppStyles.ratingBarContainer}>
+        <Text style={AppStyles.ratingBarText}>{stars} stars</Text>
+        <View style={AppStyles.ratingBar}>
+          <View style={[AppStyles.ratingBarFill, { width: `${percentage}%` }]} />
+        </View>
+        <Text style={AppStyles.ratingBarCount}>{count}</Text>
+      </View>
+    );
+  };
+
+  // Render individual review item
+  const renderReviewItem = ({ item }) => (
+    <View style={AppStyles.reviewItem}>
+      <View style={AppStyles.reviewHeader}>
+        <Image source={{ uri: item.user.avatar }} style={AppStyles.reviewerAvatar} />
+        <View style={AppStyles.reviewerInfo}>
+          <Text style={AppStyles.reviewerName}>{item.user.name}</Text>
+          <View style={AppStyles.reviewRating}>
+            {renderStars(item.rating)}
+            <Text style={AppStyles.reviewDate}>{item.date}</Text>
+          </View>
+        </View>
+      </View>
+      
+      <Text style={AppStyles.reviewComment}>{item.comment}</Text>
+      
+      {item.photos.length > 0 && (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={AppStyles.reviewPhotosContainer}>
+          {item.photos.map((photo, index) => (
+            <Image key={index} source={{ uri: photo }} style={AppStyles.reviewPhoto} />
+          ))}
+        </ScrollView>
+      )}
+    </View>
+  );
 
   // Render content based on active tab
   const renderTabContent = () => {
@@ -186,6 +288,44 @@ const Product = ({ route, navigation }) => {
           <Text style={AppStyles.productDescription}>
             {productDetails.materials}
           </Text>
+        );
+      case 'reviews':
+        return (
+          <View style={AppStyles.reviewsContainer}>
+            {/* Rating Summary */}
+            <View style={AppStyles.ratingSummary}>
+              <View style={AppStyles.averageRatingContainer}>
+                <Text style={AppStyles.averageRating}>{averageRating.toFixed(1)}</Text>
+                <View style={AppStyles.averageStars}>
+                  {renderStars(Math.round(averageRating))}
+                </View>
+                <Text style={AppStyles.totalReviews}>{reviewsData.length} reviews</Text>
+              </View>
+              
+              <View style={AppStyles.ratingDistribution}>
+                {[5, 4, 3, 2, 1].map(stars => (
+                  renderRatingBar(stars, ratingDistribution[stars], reviewsData.length)
+                ))}
+              </View>
+            </View>
+
+            {/* Customer Photos */}
+            <Text style={[AppStyles.productSectionTitle, {marginTop: 24}]}>Customer Photos</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={AppStyles.customerPhotosContainer}>
+              {reviewsData.flatMap(review => review.photos).slice(0, 8).map((photo, index) => (
+                <Image key={index} source={{ uri: photo }} style={AppStyles.customerPhoto} />
+              ))}
+            </ScrollView>
+
+            {/* Reviews List */}
+            <Text style={[AppStyles.productSectionTitle, {marginTop: 24}]}>All Reviews</Text>
+            <FlatList
+              data={reviewsData}
+              renderItem={renderReviewItem}
+              keyExtractor={item => item.id.toString()}
+              scrollEnabled={false}
+            />
+          </View>
         );
       default:
         return null;
@@ -263,19 +403,21 @@ const Product = ({ route, navigation }) => {
           <Text style={AppStyles.productName}>{product.name}</Text>
           
           {/* Rating and Reviews */}
-          <View style={AppStyles.productRatingContainer}>
+          <TouchableOpacity 
+            style={AppStyles.productRatingContainer}
+            onPress={() => setActiveTab('reviews')}
+          >
             <View style={AppStyles.productRatingBadge}>
               <Text style={AppStyles.productRatingText}>{product.rating}</Text>
               <Icon name="star" size={14} color="#fff" />
             </View>
             <Text style={AppStyles.productReviewText}>({product.reviews} reviews)</Text>
             <Text style={AppStyles.productSoldText}>• 1.2k+ sold</Text>
-          </View>
+            <Icon name="chevron-right" size={16} color="#666" style={{ marginLeft: 4 }} />
+          </TouchableOpacity>
 
           {/* Price */}
           <Text style={AppStyles.productPrice}>₹{product.price.toLocaleString('en-IN')}</Text>
-
-          
 
           {/* Color Options (if applicable) */}
           {product.colors && (
@@ -331,7 +473,7 @@ const Product = ({ route, navigation }) => {
           <ScrollView 
             horizontal 
             showsHorizontalScrollIndicator={false}
-            style={{ marginVertical: 20, marginHorizontal: -7, }}
+            style={{ marginVertical: 20, marginHorizontal: -7 }}
             contentContainerStyle={{ paddingHorizontal: 0 }}
           >
             <TouchableOpacity 
@@ -378,6 +520,21 @@ const Product = ({ route, navigation }) => {
                 Materials Used
               </Text>
             </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={[
+                AppStyles.tabButtonHorizontal,
+                activeTab === 'reviews' && AppStyles.activeTabButtonHorizontal
+              ]}
+              onPress={() => setActiveTab('reviews')}
+            >
+              <Text style={[
+                AppStyles.tabButtonTextHorizontal,
+                activeTab === 'reviews' && AppStyles.activeTabButtonTextHorizontal
+              ]}>
+                Reviews ({reviewsData.length})
+              </Text>
+            </TouchableOpacity>
           </ScrollView>
 
           {/* Tab Content */}
@@ -403,8 +560,6 @@ const Product = ({ route, navigation }) => {
               <Text style={AppStyles.viewProfileText}>View Full Profile →</Text>
             </View>
           </TouchableOpacity>
-
-          
         </View>
       </ScrollView>
 

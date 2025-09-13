@@ -20,27 +20,21 @@ import Returns from '../Returns';
 import Wishlist from '../Wishlist';
 import ArtisanProfile from '../ArtisanProfile';
 import ArtisanBlog from '../ArtisanBlog';
+import OrderSuccess from '../OrderSuccess';
+import VideoPlayer from '../VideoPlayer';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+const VideosStack = createNativeStackNavigator();
 
-// Placeholder screens
-const VideosScreen = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text>Videos - Coming Soon</Text>
-  </View>
-);
 
-const CartScreen = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text>Cart - Coming Soon</Text>
-  </View>
-);
 
-const CategoriesScreen = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text>Categories - Coming Soon</Text>
-  </View>
+// Videos Stack Navigator
+const VideosStackScreen = () => (
+  <VideosStack.Navigator screenOptions={{ headerShown: false }}>
+    <VideosStack.Screen name="VideosHome" component={VideoPlayer} />
+    {/* Add other video-related screens here if needed */}
+  </VideosStack.Navigator>
 );
 
 const BottomTabs = () => (
@@ -50,9 +44,10 @@ const BottomTabs = () => (
   >
     <Tab.Screen name="home" component={HomePage} />
     <Tab.Screen name="profile" component={Profile} />
-    <Tab.Screen name="videos" component={VideosScreen} />
+    <Tab.Screen name="videos" component={VideosStackScreen} />
     <Tab.Screen name="cart" component={Cart} />
     <Tab.Screen name="categories" component={Categories} />
+    
   </Tab.Navigator>
 );
 
@@ -74,7 +69,9 @@ const Navigation = () => {
         <Stack.Screen name="Wishlist" component={Wishlist} />
         <Stack.Screen name="ArtisanProfile" component={ArtisanProfile} />
         <Stack.Screen name="ArtisanBlog" component={ArtisanBlog} />
-
+        <Stack.Screen name="OrderSuccess" component={OrderSuccess} />
+        {/* Add VideoPlayer as a stack screen for navigation from other screens */}
+        <Stack.Screen name="VideoPlayer" component={VideoPlayer} />
 
       </Stack.Navigator>
     </NavigationContainer>

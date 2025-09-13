@@ -45,7 +45,7 @@ const LoginForm = () => {
           <View style={AppStyles.radioCircle}>
             {otpMethod === 'sms' && <View style={AppStyles.radioChecked} />}
           </View>
-          <Icon name="sms" size={20} color="#a0522d" style={AppStyles.optionIcon} />
+          <Icon name="sms" size={20} color="#333" style={AppStyles.optionIcon} />
           <Text style={AppStyles.radioLabel}> SMS</Text>
           
         </TouchableOpacity>
@@ -57,7 +57,7 @@ const LoginForm = () => {
           <View style={AppStyles.radioCircle}>
             {otpMethod === 'whatsapp' && <View style={AppStyles.radioChecked} />}
           </View>
-          <Icon name="whatsapp" size={20} color="#25D366" style={AppStyles.optionIcon} />
+          <Icon name="whatsapp" size={20} color="#333" style={AppStyles.optionIcon} />
           <Text style={AppStyles.radioLabel}> WhatsApp</Text>
           
         </TouchableOpacity>

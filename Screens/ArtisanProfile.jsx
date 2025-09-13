@@ -42,7 +42,8 @@ const ArtisanProfile = ({ route, navigation }) => {
         image: 'https://i0.wp.com/utkalikaodisha.com/wp-content/uploads/2024/12/Sp__dp6__silk_set304_trupti_side1__2024-12-19-16-42-2__4096X4096_optimized_550.jpg?resize=600%2C600&ssl=1',
         price: 12599,
         rating: 4.8,
-        reviews: 89
+        reviews: 89,
+        artisan: 'Rajesh Meher' // Added artisan name
       },
       {
         id: '2',
@@ -50,7 +51,8 @@ const ArtisanProfile = ({ route, navigation }) => {
         image: 'https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/d/a/tr:h-400,w-300,cm-pad_resize/da4e416FBSRMH1897_1.jpg?rnd=20200526195200',
         price: 7850,
         rating: 4.6,
-        reviews: 67
+        reviews: 67,
+        artisan: 'Rajesh Meher' // Added artisan name
       },
       {
         id: '3',
@@ -58,7 +60,8 @@ const ArtisanProfile = ({ route, navigation }) => {
         image: 'https://www.kiransboutique.com/wp-content/uploads/2021/12/1727221946985_Deep-Red-and-Gulabi-Ikat-Cotton-Suit-Material-%E2%80%93-Traditional-Charm-for-Everyday-Style.jpeg',
         price: 9500,
         rating: 4.9,
-        reviews: 124
+        reviews: 124,
+        artisan: 'Rajesh Meher' // Added artisan name
       },
       {
         id: '4',
@@ -66,7 +69,8 @@ const ArtisanProfile = ({ route, navigation }) => {
         image: 'https://masakalee.com/cdn/shop/files/handmade-nakshi-kantha-dupatta-in-pure-silk-792495.jpg?v=1721673948',
         price: 6725,
         rating: 4.7,
-        reviews: 56
+        reviews: 56,
+        artisan: 'Rajesh Meher' // Added artisan name
       },
       {
         id: '5',
@@ -74,7 +78,8 @@ const ArtisanProfile = ({ route, navigation }) => {
         image: 'https://i0.wp.com/utkalikaodisha.com/wp-content/uploads/2023/05/bomkai-cotton-6__Bomkai-cotton-6__cotton_set309_kavya_side1_tassels__2023-5-12-11-29-57__1200X1200.jpg?fit=1200%2C1200&ssl=1',
         price: 8999,
         rating: 4.8,
-        reviews: 78
+        reviews: 78,
+        artisan: 'Rajesh Meher' // Added artisan name
       },
       {
         id: '6',
@@ -82,7 +87,8 @@ const ArtisanProfile = ({ route, navigation }) => {
         image: 'https://m.media-amazon.com/images/I/91-fS-tYAnL._UY1100_.jpg',
         price: 11250,
         rating: 4.9,
-        reviews: 145
+        reviews: 145,
+        artisan: 'Rajesh Meher' // Added artisan name
       }
     ]
   });
@@ -95,6 +101,14 @@ const ArtisanProfile = ({ route, navigation }) => {
         // colors: ['#FF5733', '#33FF57', '#3357FF', '#F3FF33'].map(color => ({ value: color })),
         // sizes: ['S', 'M', 'L', 'XL']
       }
+    });
+  };
+
+  // Function to navigate to ProductList with artisan's products
+  const navigateToProductList = () => {
+    navigation.navigate('ProductList', {
+      products: artisanData.products,
+      categoryName: `${artisanData.name}'s Creations`
     });
   };
 
@@ -248,7 +262,7 @@ const ArtisanProfile = ({ route, navigation }) => {
         <View style={[AppStyles.productDetailsContainer, { marginBottom: 20 }]}>
           <View style={AppStyles.sectionHeader}>
             <Text style={AppStyles.productSectionTitle}>Artisan's Creations</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={navigateToProductList}>
               <Text style={{ color: '#a0522d', fontSize: 14, fontWeight: '500' }}>
                 View All
               </Text>
@@ -256,7 +270,7 @@ const ArtisanProfile = ({ route, navigation }) => {
           </View>
           
           <FlatList
-            data={artisanData.products}
+            data={artisanData.products.slice(0, 4)} // Show only first 4 products
             renderItem={renderProductItem}
             keyExtractor={item => item.id}
             numColumns={2}

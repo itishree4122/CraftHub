@@ -45,27 +45,27 @@ const Profile = () => {
           <Text style={AppStyles.sectionTitle}>My Account</Text>
           
           <TouchableOpacity style={AppStyles.accountOption} onPress={() => navigation.navigate('MyProfile')}>
-            <Icon name="person" size={24} color="#a0522d" />
+            <Icon name="person" size={24} color="#333" />
             <Text style={AppStyles.optionText}>My Profile</Text>
-            <Icon name="keyboard-arrow-right" size={24} color="#C27D5E" />
+            <Icon name="keyboard-arrow-right" size={24} color="#888" />
           </TouchableOpacity>
           
           <TouchableOpacity style={AppStyles.accountOption} onPress={() => navigation.navigate('Wishlist')}>
-            <Icon name="favorite" size={24} color="#a0522d" />
+            <Icon name="favorite" size={24} color="#333" />
             <Text style={AppStyles.optionText}>Wishlist</Text>
-            <Icon name="keyboard-arrow-right" size={24} color="#C27D5E" />
+            <Icon name="keyboard-arrow-right" size={24} color="#888" />
           </TouchableOpacity>
           
           <TouchableOpacity style={AppStyles.accountOption}>
-            <Icon name="location-on" size={24} color="#a0522d" />
+            <Icon name="location-on" size={24} color="#333" />
             <Text style={AppStyles.optionText}>Addresses</Text>
-            <Icon name="keyboard-arrow-right" size={24} color="#C27D5E" />
+            <Icon name="keyboard-arrow-right" size={24} color="#888" />
           </TouchableOpacity>
           
           <TouchableOpacity style={AppStyles.accountOption}>
-            <Icon name="payment" size={24} color="#a0522d" />
+            <Icon name="payment" size={24} color="#333" />
             <Text style={AppStyles.optionText}>Payment Methods</Text>
-            <Icon name="keyboard-arrow-right" size={24} color="#C27D5E" />
+            <Icon name="keyboard-arrow-right" size={24} color="#888" />
           </TouchableOpacity>
         </View>
 
@@ -74,21 +74,21 @@ const Profile = () => {
           <Text style={AppStyles.sectionTitle}>Support</Text>
           
           <TouchableOpacity style={AppStyles.accountOption}>
-            <Icon name="help" size={24} color="#a0522d" />
+            <Icon name="help" size={24} color="#333" />
             <Text style={AppStyles.optionText}>Help Center</Text>
-            <Icon name="keyboard-arrow-right" size={24} color="#C27D5E" />
+            <Icon name="keyboard-arrow-right" size={24} color="#888" />
           </TouchableOpacity>
           
           <TouchableOpacity style={AppStyles.accountOption}>
-            <Icon name="headset-mic" size={24} color="#a0522d" />
+            <Icon name="headset-mic" size={24} color="#333" />
             <Text style={AppStyles.optionText}>Contact Us</Text>
-            <Icon name="keyboard-arrow-right" size={24} color="#C27D5E" />
+            <Icon name="keyboard-arrow-right" size={24} color="#888" />
           </TouchableOpacity>
           
           <TouchableOpacity style={AppStyles.accountOption}>
-            <Icon name="info" size={24} color="#a0522d" />
+            <Icon name="info" size={24} color="#333" />
             <Text style={AppStyles.optionText}>About Craft Hub</Text>
-            <Icon name="keyboard-arrow-right" size={24} color="#C27D5E" />
+            <Icon name="keyboard-arrow-right" size={24} color="#888" />
           </TouchableOpacity>
         </View>
       </ScrollView>
