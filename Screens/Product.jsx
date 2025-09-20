@@ -17,6 +17,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppStyles from './StyleSheet/AppStyles';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 const Product = ({ route, navigation }) => {
   const { product } = route.params;
@@ -335,6 +337,9 @@ const Product = ({ route, navigation }) => {
   return (
     <View style={AppStyles.container}>
       {/* Header */}
+      <SafeAreaView edges={['top']} style={AppStyles.safeArea} >
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+
       <View style={AppStyles.headerContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 4 }}>
@@ -355,6 +360,7 @@ const Product = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
+      </SafeAreaView>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Product Images */}
@@ -541,7 +547,7 @@ const Product = ({ route, navigation }) => {
           {renderTabContent()}
 
           {/* Artisan Info */}
-          <Text style={[AppStyles.productSectionTitle, {marginTop: 24}]}>Artisan's Story</Text>
+          <Text style={[AppStyles.productSectionTitle, {marginTop: 24}]}>Seller Info</Text>
           <TouchableOpacity 
             style={AppStyles.productArtisanContainer}
             onPress={navigateToArtisanProfile}
@@ -564,6 +570,7 @@ const Product = ({ route, navigation }) => {
       </ScrollView>
 
       {/* Footer with Buy Options */}
+      <SafeAreaView edges={['bottom']} >
       <View style={AppStyles.productFooter}>
         <TouchableOpacity 
           style={AppStyles.productCartButton}
@@ -579,6 +586,7 @@ const Product = ({ route, navigation }) => {
           <Text style={AppStyles.productBuyButtonText}>Buy Now</Text>
         </TouchableOpacity>
       </View>
+      </SafeAreaView>
 
       {/* Zoom Modal */}
       <Modal

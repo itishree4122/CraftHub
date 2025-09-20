@@ -12,6 +12,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppStyles from './StyleSheet/AppStyles';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -309,7 +311,10 @@ const Wishlist = ({ navigation }) => {
   return (
     <View style={AppStyles.container}>
       {/* Header */}
-      <View style={AppStyles.headerContainer}>
+      
+      <SafeAreaView edges={['top']} style={AppStyles.safeArea}>
+        <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+        <View style={AppStyles.headerContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 4 }}>
             <Icon name="arrow-back" size={24} color="#333" />
@@ -322,6 +327,8 @@ const Wishlist = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
+      </SafeAreaView>
+      
 
       {/* Results Count */}
       <View style={{ backgroundColor: '#fff', padding: 12, borderBottomWidth: 1, borderBottomColor: '#f0f0f0' }}>
@@ -331,6 +338,7 @@ const Wishlist = ({ navigation }) => {
       </View>
 
       {/* Wishlist Items */}
+      <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
       <FlatList
         data={sortedWishlist}
         renderItem={renderWishlistItem}
@@ -363,6 +371,7 @@ const Wishlist = ({ navigation }) => {
           </View>
         }
       />
+      </SafeAreaView>
 
       <SortModal />
     </View>

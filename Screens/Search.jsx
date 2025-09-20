@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppStyles from './StyleSheet/AppStyles';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Search = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -146,6 +147,7 @@ const Search = ({ navigation }) => {
 
   return (
     <View style={AppStyles.container}>
+      <SafeAreaView edges={['top']} >
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       
       {/* Search Header */}
@@ -176,6 +178,7 @@ const Search = ({ navigation }) => {
           )}
         </View>
       </View>
+      </SafeAreaView>
 
       {/* Search Content */}
       <View style={AppStyles.profileContent}>
@@ -215,7 +218,7 @@ const Search = ({ navigation }) => {
                   <TouchableOpacity
                     key={index}
                     style={{
-                      backgroundColor: '#e3f2fd',
+                      backgroundColor: '#faece0',
                       paddingHorizontal: 16,
                       paddingVertical: 8,
                       borderRadius: 20,
@@ -224,7 +227,7 @@ const Search = ({ navigation }) => {
                     }}
                     onPress={() => handleRecentSearch(item)}
                   >
-                    <Text style={{ fontSize: 14, color: '#1976d2' }}>{item}</Text>
+                    <Text style={{ fontSize: 14, color: '#a0522d' }}>{item}</Text>
                   </TouchableOpacity>
                 ))}
               </View>

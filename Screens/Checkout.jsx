@@ -6,12 +6,15 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  StatusBar,
   TextInput,
   Animated,
   Easing,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppStyles from './StyleSheet/AppStyles';
+
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Checkout = ({ navigation, route }) => {
   const { cartItems, subtotal, tax, deliveryCharge, total } = route.params;
@@ -145,6 +148,8 @@ const Checkout = ({ navigation, route }) => {
 
   return (
     <View style={AppStyles.container}>
+      <SafeAreaView edges={['top']} >
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       {/* Header */}
       <View style={AppStyles.headerContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -157,6 +162,7 @@ const Checkout = ({ navigation, route }) => {
           <View style={{ width: 24 }} />
         </View>
       </View>
+      </SafeAreaView>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Delivery Address Section */}
@@ -414,6 +420,7 @@ const Checkout = ({ navigation, route }) => {
       </ScrollView>
 
       {/* Footer with Place Order Button */}
+      <SafeAreaView edges={['bottom']} >
       <View style={AppStyles.cartFooter}>
         <View style={[AppStyles.priceRow, { marginBottom: 12 }]}>
           <Text style={AppStyles.totalLabel}>Total Payable</Text>
@@ -428,6 +435,7 @@ const Checkout = ({ navigation, route }) => {
           </Text>
         </TouchableOpacity>
       </View>
+      </SafeAreaView>
     </View>
   );
 };

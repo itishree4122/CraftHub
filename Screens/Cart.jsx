@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppStyles from './StyleSheet/AppStyles';
+import { StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Cart = ({ navigation, route }) => {
   // Sample Odisha handicraft products
@@ -212,7 +214,9 @@ const Cart = ({ navigation, route }) => {
   return (
     <View style={AppStyles.container}>
       {/* Header */}
-      <View style={AppStyles.headerContainer}>
+      <SafeAreaView edges={['top']} style={AppStyles.safeArea}>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+        <View style={AppStyles.headerContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 4 }}>
             <Icon name="arrow-back" size={24} color="#333" />
@@ -225,6 +229,10 @@ const Cart = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
       </View>
+      </SafeAreaView>
+        
+     
+      
 
       {cartItems.length === 0 ? (
         // Empty cart state

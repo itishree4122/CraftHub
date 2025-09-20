@@ -6,19 +6,23 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  Dimensions
+  Dimensions,
+  Modal,
+  StatusBar,
+  TextInput
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppStyles from './StyleSheet/AppStyles';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 
 const ArtisanProfile = ({ route, navigation }) => {
   const { artisan } = route.params;
   
-  // Sample artisan data
   const [artisanData, setArtisanData] = useState({
     id: '1',
+    shopName: 'Heritage Weaves',
     name: artisan || 'Rajesh Meher',
     profilePic: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     coverPhoto: 'https://5.imimg.com/data5/ANDROID/Default/2020/11/CH/RM/AG/51816421/product-jpeg-500x500.jpg',
@@ -28,12 +32,47 @@ const ArtisanProfile = ({ route, navigation }) => {
     rating: 4.9,
     reviews: 128,
     completedOrders: 456,
-    story: 'For three generations, my family has been weaving the finest silk sarees in Nuapatna. Each piece takes 15-20 days to complete, but the satisfaction of preserving our heritage is priceless. I learned this craft from my father and grandfather, and now I\'m teaching my children to continue this beautiful tradition.',
-    techniques: ['Traditional Handloom', 'Ikkat Weaving', 'Natural Dyeing', 'Silk Processing'],
-    awards: [
-      'National Award for Handlooms (2018)',
-      'Odisha State Craftsmanship Award (2015)',
-      'Best Traditional Weaver (2012)'
+    aboutShop: 'Heritage Weaves is a family-run establishment with three generations of expertise in traditional Odisha handloom. We specialize in authentic Sambalpuri, Bomkai, and Nuapatna silk sarees, using techniques passed down through generations.',
+    shippingPolicy: '• Orders are processed within 1-2 business days\n• Free shipping on orders above ₹5000\n• Delivery within 7-10 business days across India\n• International shipping available with additional charges',
+    returnPolicy: '• 7-day return policy for defective products\n• Products must be in original condition with tags attached\n• Return shipping costs are borne by the customer\n• Refunds are processed within 5-7 business days',
+    contactInfo: {
+      phone: '+91 9876543210',
+      email: 'heritageweaves@example.com',
+      hours: 'Mon-Sat: 10AM - 7PM'
+    },
+    feedbacks: [
+      {
+        id: '1',
+        customer: 'Priya Sharma',
+        rating: 5,
+        comment: 'Excellent craftsmanship! The saree was even more beautiful in person. Perfect stitching and color.',
+        date: '2 weeks ago',
+        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      },
+      {
+        id: '2',
+        customer: 'Anjali Patel',
+        rating: 4,
+        comment: 'Beautiful product but delivery was slightly delayed. Quality is exceptional though!',
+        date: '1 month ago',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      },
+      {
+        id: '3',
+        customer: 'Rahul Verma',
+        rating: 5,
+        comment: 'Authentic handloom work. Will definitely purchase again from Heritage Weaves.',
+        date: '2 months ago',
+        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      },
+      {
+        id: '4',
+        customer: 'Sneha Desai',
+        rating: 3,
+        comment: 'Product quality was good but the color was slightly different from the picture.',
+        date: '3 months ago',
+        avatar: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      }
     ],
     products: [
       {
@@ -43,7 +82,7 @@ const ArtisanProfile = ({ route, navigation }) => {
         price: 12599,
         rating: 4.8,
         reviews: 89,
-        artisan: 'Rajesh Meher' // Added artisan name
+        artisan: 'Rajesh Meher'
       },
       {
         id: '2',
@@ -52,7 +91,7 @@ const ArtisanProfile = ({ route, navigation }) => {
         price: 7850,
         rating: 4.6,
         reviews: 67,
-        artisan: 'Rajesh Meher' // Added artisan name
+        artisan: 'Rajesh Meher'
       },
       {
         id: '3',
@@ -61,7 +100,7 @@ const ArtisanProfile = ({ route, navigation }) => {
         price: 9500,
         rating: 4.9,
         reviews: 124,
-        artisan: 'Rajesh Meher' // Added artisan name
+        artisan: 'Rajesh Meher'
       },
       {
         id: '4',
@@ -70,27 +109,19 @@ const ArtisanProfile = ({ route, navigation }) => {
         price: 6725,
         rating: 4.7,
         reviews: 56,
-        artisan: 'Rajesh Meher' // Added artisan name
-      },
-      {
-        id: '5',
-        name: 'Bomkai Cotton Saree',
-        image: 'https://i0.wp.com/utkalikaodisha.com/wp-content/uploads/2023/05/bomkai-cotton-6__Bomkai-cotton-6__cotton_set309_kavya_side1_tassels__2023-5-12-11-29-57__1200X1200.jpg?fit=1200%2C1200&ssl=1',
-        price: 8999,
-        rating: 4.8,
-        reviews: 78,
-        artisan: 'Rajesh Meher' // Added artisan name
-      },
-      {
-        id: '6',
-        name: 'Traditional Sambalpuri Saree',
-        image: 'https://m.media-amazon.com/images/I/91-fS-tYAnL._UY1100_.jpg',
-        price: 11250,
-        rating: 4.9,
-        reviews: 145,
-        artisan: 'Rajesh Meher' // Added artisan name
+        artisan: 'Rajesh Meher'
       }
     ]
+  });
+
+  // State for modals and user input
+  const [reviewModalVisible, setReviewModalVisible] = useState(false);
+  const [questionModalVisible, setQuestionModalVisible] = useState(false);
+  const [selectedRatingFilter, setSelectedRatingFilter] = useState('all');
+  const [userQuestion, setUserQuestion] = useState('');
+  const [userReview, setUserReview] = useState({
+    rating: 0,
+    comment: ''
   });
 
   const navigateToProduct = (product) => {
@@ -98,17 +129,14 @@ const ArtisanProfile = ({ route, navigation }) => {
       product: {
         ...product,
         artisan: artisanData.name,
-        // colors: ['#FF5733', '#33FF57', '#3357FF', '#F3FF33'].map(color => ({ value: color })),
-        // sizes: ['S', 'M', 'L', 'XL']
       }
     });
   };
 
-  // Function to navigate to ProductList with artisan's products
   const navigateToProductList = () => {
     navigation.navigate('ProductList', {
       products: artisanData.products,
-      categoryName: `${artisanData.name}'s Creations`
+      categoryName: `${artisanData.shopName} Products`
     });
   };
 
@@ -117,7 +145,7 @@ const ArtisanProfile = ({ route, navigation }) => {
       style={[
         AppStyles.handicraftCard,
         { 
-          width: (width - 48) / 2, // Calculate width for 2 columns with proper padding
+          width: (width - 48) / 2,
           marginRight: index % 2 === 0 ? 8 : 0,
           marginBottom: 16
         }
@@ -136,141 +164,303 @@ const ArtisanProfile = ({ route, navigation }) => {
     </TouchableOpacity>
   );
 
+  const renderRatingStars = (rating, size = 16) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+    
+    for (let i = 1; i <= 5; i++) {
+      if (i <= fullStars) {
+        stars.push(<Icon key={i} name="star" size={size} color="#FFD700" />);
+      } else if (i === fullStars + 1 && hasHalfStar) {
+        stars.push(<Icon key={i} name="star-half" size={size} color="#FFD700" />);
+      } else {
+        stars.push(<Icon key={i} name="star-outline" size={size} color="#FFD700" />);
+      }
+    }
+    
+    return <View style={{ flexDirection: 'row' }}>{stars}</View>;
+  };
+
+  const renderFeedbackItem = ({ item }) => (
+    <View style={AppStyles.feedbackItem}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+        <Image source={{ uri: item.avatar }} style={AppStyles.avatar} />
+        <View style={{ marginLeft: 12, flex: 1 }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 14 }}>{item.customer}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
+            {renderRatingStars(item.rating)}
+            <Text style={{ marginLeft: 8, fontSize: 12, color: '#666' }}>{item.date}</Text>
+          </View>
+        </View>
+      </View>
+      <Text style={{ fontSize: 14, color: '#333', lineHeight: 20 }}>{item.comment}</Text>
+    </View>
+  );
+
+  // Filter feedbacks based on rating
+  const filteredFeedbacks = selectedRatingFilter === 'all' 
+    ? artisanData.feedbacks 
+    : artisanData.feedbacks.filter(fb => Math.floor(fb.rating) === parseInt(selectedRatingFilter));
+
+  // Handle submitting a question
+  const handleSubmitQuestion = () => {
+    if (userQuestion.trim()) {
+      // Here you would typically send the question to your backend
+      alert('Your question has been submitted to the seller!');
+      setUserQuestion('');
+      setQuestionModalVisible(false);
+    }
+  };
+
+  // Handle submitting a review
+  const handleSubmitReview = () => {
+    if (userReview.rating > 0 && userReview.comment.trim()) {
+      // Here you would typically send the review to your backend
+      alert('Thank you for your feedback!');
+      setUserReview({ rating: 0, comment: '' });
+    }
+  };
+
+  // Render the rating filter buttons
+  const renderRatingFilters = () => (
+    <View style={AppStyles.filterContainer}>
+      <Text style={AppStyles.filterTitle}>Filter by rating:</Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={AppStyles.filterScroll}>
+        <TouchableOpacity 
+          style={[AppStyles.filterButton, selectedRatingFilter === 'all' && AppStyles.filterButtonActive]}
+          onPress={() => setSelectedRatingFilter('all')}
+        >
+          <Text style={[AppStyles.filterText, selectedRatingFilter === 'all' && AppStyles.filterTextActive]}>All</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={[AppStyles.filterButton, selectedRatingFilter === '5' && AppStyles.filterButtonActive]}
+          onPress={() => setSelectedRatingFilter('5')}
+        >
+          <Text style={[AppStyles.filterText, selectedRatingFilter === '5' && AppStyles.filterTextActive]}>5 Stars</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={[AppStyles.filterButton, selectedRatingFilter === '4' && AppStyles.filterButtonActive]}
+          onPress={() => setSelectedRatingFilter('4')}
+        >
+          <Text style={[AppStyles.filterText, selectedRatingFilter === '4' && AppStyles.filterTextActive]}>4 Stars</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={[AppStyles.filterButton, selectedRatingFilter === '3' && AppStyles.filterButtonActive]}
+          onPress={() => setSelectedRatingFilter('3')}
+        >
+          <Text style={[AppStyles.filterText, selectedRatingFilter === '3' && AppStyles.filterTextActive]}>3 Stars</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={[AppStyles.filterButton, selectedRatingFilter === '2' && AppStyles.filterButtonActive]}
+          onPress={() => setSelectedRatingFilter('2')}
+        >
+          <Text style={[AppStyles.filterText, selectedRatingFilter === '2' && AppStyles.filterTextActive]}>2 Stars</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={[AppStyles.filterButton, selectedRatingFilter === '1' && AppStyles.filterButtonActive]}
+          onPress={() => setSelectedRatingFilter('1')}
+        >
+          <Text style={[AppStyles.filterText, selectedRatingFilter === '1' && AppStyles.filterTextActive]}>1 Star</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
+  );
+
   return (
     <View style={AppStyles.container}>
       {/* Header */}
-      <View style={AppStyles.headerContainer}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 4 }}>
-            <Icon name="arrow-back" size={24} color="#333" />
-          </TouchableOpacity>
-          <Text style={[AppStyles.profileHeaderTitle, { fontSize: 18 }]} numberOfLines={1}>
-            Artisan Profile
-          </Text>
-          <View style={{ width: 24 }} />
-        </View>
+      <SafeAreaView edges={['top']} style={AppStyles.safeArea} >
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <View style={AppStyles.artisanHeaderContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 4 }}>
+          <Icon name="arrow-back" size={24} color="#333" />
+        </TouchableOpacity>
+        <Text style={AppStyles.headerTitle} numberOfLines={1}>
+          Shop Profile
+        </Text>
+        <View style={{ width: 24 }} />
       </View>
+      </SafeAreaView>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Cover Photo */}
         <Image 
           source={{ uri: artisanData.coverPhoto }} 
-          style={{ width: '100%', height: 200 }}
+          style={AppStyles.coverPhoto}
           resizeMode="cover"
         />
 
-        {/* Profile Header */}
-        <View style={{ padding: 16, backgroundColor: '#fff' }}>
-          <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginBottom: 16 }}>
-            <Image 
-              source={{ uri: artisanData.profilePic }} 
-              style={{ width: 80, height: 80, borderRadius: 40, marginRight: 16 }}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>
-                {artisanData.name}
+        {/* Shop Header */}
+        <View style={AppStyles.shopHeader}>
+          <Image 
+            source={{ uri: artisanData.profilePic }} 
+            style={AppStyles.profileImage}
+          />
+          <View style={AppStyles.shopInfo}>
+            <Text style={AppStyles.shopName}>{artisanData.shopName}</Text>
+            <Text style={AppStyles.ownerName}>By {artisanData.name}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
+              {renderRatingStars(artisanData.rating)}
+              <Text style={{ marginLeft: 8, fontSize: 14, color: '#666' }}>
+                ({artisanData.reviews} reviews)
               </Text>
-              <Text style={{ fontSize: 16, color: '#a0522d', marginBottom: 4 }}>
-                {artisanData.craft}
-              </Text>
-              <Text style={{ fontSize: 14, color: '#666', marginBottom: 8 }}>
-                <Icon name="location-on" size={14} color="#666" /> {artisanData.location}
-              </Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
-                  <Icon name="star" size={16} color="#FFD700" />
-                  <Text style={{ fontSize: 14, color: '#666', marginLeft: 4 }}>
-                    {artisanData.rating} ({artisanData.reviews} reviews)
-                  </Text>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Icon name="work" size={16} color="#666" />
-                  <Text style={{ fontSize: 14, color: '#666', marginLeft: 4 }}>
-                    {artisanData.experience} experience
-                  </Text>
-                </View>
-              </View>
             </View>
-          </View>
-
-          {/* Stats */}
-          <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20 }}>
-            <View style={{ alignItems: 'center' }}>
-              <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#a0522d' }}>
-                {artisanData.completedOrders}+
-              </Text>
-              <Text style={{ fontSize: 14, color: '#666' }}>Orders Completed</Text>
-            </View>
-            <View style={{ alignItems: 'center' }}>
-              <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#a0522d' }}>
-                {artisanData.experience}
-              </Text>
-              <Text style={{ fontSize: 14, color: '#666' }}>Experience</Text>
-            </View>
-            <View style={{ alignItems: 'center' }}>
-              <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#a0522d' }}>
-                {artisanData.rating}/5
-              </Text>
-              <Text style={{ fontSize: 14, color: '#666' }}>Rating</Text>
-            </View>
+            <Text style={{ fontSize: 14, color: '#666', marginTop: 4 }}>
+              <Icon name="location-on" size={14} color="#666" /> {artisanData.location}
+            </Text>
           </View>
         </View>
 
-        {/* Artisan Story */}
-        <View style={AppStyles.productDetailsContainer}>
-          <Text style={AppStyles.productSectionTitle}>My Story</Text>
-          <Text style={[AppStyles.productDescription, { lineHeight: 24 }]}>
-            {artisanData.story}
+        {/* Shop Stats */}
+        <View style={AppStyles.statsContainer}>
+          <View style={AppStyles.statItem}>
+            <Text style={AppStyles.statValue}>{artisanData.completedOrders}+</Text>
+            <Text style={AppStyles.statLabel}>Orders</Text>
+          </View>
+          <View style={AppStyles.statItem}>
+            <Text style={AppStyles.statValue}>{artisanData.experience}</Text>
+            <Text style={AppStyles.statLabel}>Experience</Text>
+          </View>
+          <View style={AppStyles.statItem}>
+            <Text style={AppStyles.statValue}>{artisanData.rating}/5</Text>
+            <Text style={AppStyles.statLabel}>Rating</Text>
+          </View>
+          <View style={AppStyles.statItem}>
+            <Text style={AppStyles.statValue}>{artisanData.products.length}+</Text>
+            <Text style={AppStyles.statLabel}>Products</Text>
+          </View>
+        </View>
+
+        {/* About Shop */}
+        <View style={AppStyles.artisanSectionContainer}>
+          <Text style={AppStyles.sectionTitle}>About Our Shop</Text>
+          <Text style={AppStyles.descriptionText}>
+            {artisanData.aboutShop}
           </Text>
         </View>
 
-        {/* Techniques */}
-        <View style={AppStyles.productDetailsContainer}>
-          <Text style={AppStyles.productSectionTitle}>Specialized Techniques</Text>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 8 }}>
-            {artisanData.techniques.map((technique, index) => (
-              <View key={index} style={{ 
-                backgroundColor: '#FAECE0', 
-                paddingHorizontal: 12, 
-                paddingVertical: 6, 
-                borderRadius: 16, 
-                marginRight: 8, 
-                marginBottom: 8 
-              }}>
-                <Text style={{ color: '#a0522d', fontSize: 12, fontWeight: '500' }}>
-                  {technique}
-                </Text>
-              </View>
-            ))}
+        {/* Ask Question Section */}
+        <View style={AppStyles.artisanSectionContainer}>
+          <Text style={AppStyles.sectionTitle}>Ask a Question</Text>
+          <Text style={[AppStyles.descriptionText, { marginBottom: 16 }]}>
+            Have a question about our products or process? We're happy to help!
+          </Text>
+          <TouchableOpacity 
+            style={AppStyles.askButton}
+            onPress={() => setQuestionModalVisible(true)}
+          >
+            <Icon name="help-outline" size={20} color="#a0522d" />
+            <Text style={AppStyles.askButtonText}>Ask a Question</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Shipping & Return Policies */}
+        <View style={AppStyles.artisanSectionContainer}>
+          <Text style={AppStyles.sectionTitle}>Shipping & Return Policies</Text>
+          <View style={AppStyles.policySection}>
+            <Text style={AppStyles.policySubtitle}>Shipping Policy</Text>
+            <Text style={AppStyles.policyText}>{artisanData.shippingPolicy}</Text>
+          </View>
+          <View style={AppStyles.policySection}>
+            <Text style={AppStyles.policySubtitle}>Return & Refund Policy</Text>
+            <Text style={AppStyles.policyText}>{artisanData.returnPolicy}</Text>
           </View>
         </View>
 
-        {/* Awards & Recognition */}
-        <View style={AppStyles.productDetailsContainer}>
-          <Text style={AppStyles.productSectionTitle}>Awards & Recognition</Text>
-          {artisanData.awards.map((award, index) => (
-            <View key={index} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-              <Icon name="emoji-events" size={20} color="#a0522d" />
-              <Text style={{ marginLeft: 12, fontSize: 14, color: '#666', flex: 1 }}>
-                {award}
-              </Text>
-            </View>
-          ))}
+        {/* Seller Information */}
+        <View style={AppStyles.artisanSectionContainer}>
+          <Text style={AppStyles.sectionTitle}>Seller Information</Text>
+          <View style={AppStyles.contactItem}>
+            <Icon name="phone" size={20} color="#a0522d" />
+            <Text style={AppStyles.contactText}>{artisanData.contactInfo.phone}</Text>
+          </View>
+          <View style={AppStyles.contactItem}>
+            <Icon name="email" size={20} color="#a0522d" />
+            <Text style={AppStyles.contactText}>{artisanData.contactInfo.email}</Text>
+          </View>
+          <View style={AppStyles.contactItem}>
+            <Icon name="access-time" size={20} color="#a0522d" />
+            <Text style={AppStyles.contactText}>{artisanData.contactInfo.hours}</Text>
+          </View>
         </View>
 
-        {/* Artisan's Creations */}
-        <View style={[AppStyles.productDetailsContainer, { marginBottom: 20 }]}>
+        {/* Ratings & Reviews */}
+        <View style={AppStyles.artisanSectionContainer}>
           <View style={AppStyles.sectionHeader}>
-            <Text style={AppStyles.productSectionTitle}>Artisan's Creations</Text>
-            <TouchableOpacity onPress={navigateToProductList}>
-              <Text style={{ color: '#a0522d', fontSize: 14, fontWeight: '500' }}>
-                View All
-              </Text>
+            <Text style={AppStyles.sectionTitle}>Ratings & Reviews</Text>
+            <TouchableOpacity onPress={() => setReviewModalVisible(true)}>
+              <Text style={AppStyles.viewAllText}>View All</Text>
             </TouchableOpacity>
           </View>
           
           <FlatList
-            data={artisanData.products.slice(0, 4)} // Show only first 4 products
+            data={artisanData.feedbacks.slice(0, 2)}
+            renderItem={renderFeedbackItem}
+            keyExtractor={item => item.id}
+            scrollEnabled={false}
+            contentContainerStyle={{ paddingVertical: 8 }}
+          />
+        </View>
+
+        {/* Leave Feedback Section */}
+        <View style={AppStyles.artisanSectionContainer}>
+          <Text style={AppStyles.sectionTitle}>Leave Your Feedback</Text>
+          <Text style={[AppStyles.descriptionText, { marginBottom: 16 }]}>
+            Share your experience with this seller
+          </Text>
+          
+          <View style={{ marginBottom: 16 }}>
+            <Text style={AppStyles.label}>Your Rating</Text>
+            <View style={{ flexDirection: 'row', marginTop: 8 }}>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <TouchableOpacity 
+                  key={star} 
+                  onPress={() => setUserReview({...userReview, rating: star})}
+                >
+                  <Icon 
+                    name={star <= userReview.rating ? "star" : "star-outline"} 
+                    size={28} 
+                    color="#FFD700" 
+                    style={{ marginRight: 4 }}
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+          
+          <View style={{ marginBottom: 16 }}>
+            <Text style={AppStyles.label}>Your Review</Text>
+            <TextInput
+              style={AppStyles.textInput}
+              multiline
+              numberOfLines={4}
+              placeholder="Share your experience with this seller"
+              value={userReview.comment}
+              onChangeText={(text) => setUserReview({...userReview, comment: text})}
+            />
+          </View>
+          
+          <TouchableOpacity 
+            style={[AppStyles.submitButton, (!userReview.rating || !userReview.comment.trim()) && AppStyles.submitButtonDisabled]}
+            onPress={handleSubmitReview}
+            disabled={!userReview.rating || !userReview.comment.trim()}
+          >
+            <Text style={AppStyles.submitButtonText}>Submit Review</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Products */}
+        <View style={[AppStyles.artisanSectionContainer, { marginBottom: 20 }]}>
+          <View style={AppStyles.sectionHeader}>
+            <Text style={AppStyles.sectionTitle}>Shop Products</Text>
+            <TouchableOpacity onPress={navigateToProductList}>
+              <Text style={AppStyles.viewAllText}>View All</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <FlatList
+            data={artisanData.products.slice(0, 4)}
             renderItem={renderProductItem}
             keyExtractor={item => item.id}
             numColumns={2}
@@ -279,22 +469,83 @@ const ArtisanProfile = ({ route, navigation }) => {
             contentContainerStyle={{ paddingVertical: 8 }}
           />
         </View>
-
-        {/* Contact & Follow */}
-        {/* <View style={[AppStyles.productDetailsContainer, { marginBottom: 20 }]}>
-          <Text style={AppStyles.productSectionTitle}>Connect with {artisanData.name.split(' ')[0]}</Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 16 }}>
-            <TouchableOpacity style={[AppStyles.productCartButton, { flex: 1, marginRight: 8 }]}>
-              <Icon name="message" size={20} color="#a0522d" />
-              <Text style={AppStyles.productCartButtonText}>Message</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[AppStyles.productBuyButton, { flex: 1, marginLeft: 8 }]}>
-              <Icon name="videocam" size={20} color="#fff" />
-              <Text style={AppStyles.productBuyButtonText}>Video Call</Text>
-            </TouchableOpacity>
-          </View>
-        </View> */}
       </ScrollView>
+
+      {/* Reviews Modal */}
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={reviewModalVisible}
+        onRequestClose={() => setReviewModalVisible(false)}
+      >
+        <View style={AppStyles.modalContainer}>
+          <View style={AppStyles.modalHeader}>
+            <TouchableOpacity onPress={() => setReviewModalVisible(false)}>
+              <Icon name="arrow-back" size={24} color="#333" />
+            </TouchableOpacity>
+            <Text style={AppStyles.modalTitle}>All Reviews</Text>
+            <View style={{ width: 24 }} />
+          </View>
+          
+          {renderRatingFilters()}
+          
+          <FlatList
+            data={filteredFeedbacks}
+            renderItem={renderFeedbackItem}
+            keyExtractor={item => item.id}
+            contentContainerStyle={{ padding: 16 }}
+          />
+        </View>
+      </Modal>
+
+      {/* Ask Question Modal */}
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={questionModalVisible}
+        onRequestClose={() => setQuestionModalVisible(false)}
+      >
+        <View style={AppStyles.modalContainer}>
+         
+          <View style={AppStyles.modalHeader}>
+            <TouchableOpacity onPress={() => setQuestionModalVisible(false)}>
+              <Icon name="arrow-back" size={24} color="#333" />
+            </TouchableOpacity>
+            <Text style={AppStyles.modalTitle}>Ask a Question</Text>
+            <View style={{ width: 24 }} />
+          </View>
+          
+          <View style={AppStyles.modalContent}>
+
+             <View style={{ padding: 16 }} >
+
+              <Text style={[AppStyles.descriptionText, { marginBottom: 16 }]}>
+              Have a question about our products or process? We're happy to help!
+            </Text>
+            
+            <Text style={AppStyles.label}>Your Question</Text>
+            <TextInput
+              style={[AppStyles.textInput, { height: 120 }]}
+              multiline
+              numberOfLines={6}
+              placeholder="Type your question here..."
+              value={userQuestion}
+              onChangeText={setUserQuestion}
+            />
+            
+            <TouchableOpacity 
+              style={[AppStyles.submitButton, !userQuestion.trim() && AppStyles.submitButtonDisabled]}
+              onPress={handleSubmitQuestion}
+              disabled={!userQuestion.trim()}
+            >
+              <Text style={AppStyles.submitButtonText}>Submit Question</Text>
+            </TouchableOpacity>
+            
+            </View>
+
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

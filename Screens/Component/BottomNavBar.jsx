@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppStyles from '../StyleSheet/AppStyles';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const BottomNavBar = ({ state, descriptors, navigation }) => {
   // Filter out routes that should not appear in the tab bar
@@ -12,6 +13,7 @@ const BottomNavBar = ({ state, descriptors, navigation }) => {
   });
 
   return (
+    <SafeAreaView edges={['bottom']} style={AppStyles.safeArea}>
     <View style={AppStyles.navContainer}>
       {visibleRoutes.map((route, index) => {
         const { options } = descriptors[route.key];
@@ -80,6 +82,7 @@ const BottomNavBar = ({ state, descriptors, navigation }) => {
         );
       })}
     </View>
+    </SafeAreaView>
   );
 };
 

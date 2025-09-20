@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Header from '../Screens/Component/Header';
 import BottomNavBar from '../Screens/Component/BottomNavBar';
 import AppStyles from './StyleSheet/AppStyles';
+import { StatusBar } from "react-native";
 
 const HomePage = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('home');
@@ -237,9 +238,16 @@ const HomePage = ({ navigation }) => {
 );
 
   return (
+
+    <>
+  <StatusBar
+    translucent
+    backgroundColor="transparent"
+    barStyle="light-content" // because your header has a dark gradient
+  />
     <View style={[AppStyles.container, { 
-      paddingTop: insets.top,
-      paddingBottom: insets.bottom,
+      // paddingTop: insets.top,
+      // paddingBottom: insets.bottom,
       paddingLeft: insets.left,
       paddingRight: insets.right 
     }]}>
@@ -318,6 +326,7 @@ const HomePage = ({ navigation }) => {
         onTabPress={handleTabPress}
       /> */}
     </View>
+    </>
   );
 };
 

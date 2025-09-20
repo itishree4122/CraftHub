@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'react-native';
 import AppStyles from '../StyleSheet/AppStyles';
 import LoginForm from '../Auth/LoginForm';
 import SignupForm from '../Auth/SignupForm';
@@ -17,13 +19,18 @@ const LoginSignup = () => {
   return (
     <View style={AppStyles.container}>
       {/* Header with Back Button and App Name */}
-      <View style={AppStyles.loginHeader}>
+      <SafeAreaView edges={['top']} style={AppStyles.safeArea}>
+        <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+       <View style={AppStyles.loginHeader}>
+        
         <TouchableOpacity onPress={handleBack} style={AppStyles.backButton}>
           <Icon name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
         <Text style={AppStyles.appName}>Craft Hub</Text>
         <View style={AppStyles.placeholder} /> {/* For alignment */}
       </View>
+      </SafeAreaView>
+     
 
       <ScrollView style={AppStyles.loginContent}>
         {/* Login/Sign Up Tabs */}

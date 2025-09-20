@@ -17,6 +17,7 @@ const Colors = {
   black: '#000',
   border: '#e0e0e0',
   background: '#f0f0f0',
+  background1: '#a0522d1A', // Sienna brown with transparency
   overlay: 'rgba(0, 0, 0, 0.6)',
   overlayLight: 'rgba(0, 0, 0, 0.3)',
   transparent: 'transparent',
@@ -105,6 +106,7 @@ const Typography = {
 
 const AppStyles = StyleSheet.create({
   // ===== LAYOUT STYLES =====
+
   container: {
     flex: 1,
     backgroundColor: Colors.white,
@@ -136,7 +138,7 @@ const AppStyles = StyleSheet.create({
     padding: Spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
-    ...Shadows.medium,
+    
   },
   addressContainer: {
     flexDirection: 'row',
@@ -1941,7 +1943,7 @@ paymentInfoText: {
   },
   artisanSuggestionCard: {
     width: 140,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.primaryLight,
     borderRadius: BorderRadius.lg,
     padding: Spacing.md,
     marginRight: Spacing.sm,
@@ -2028,7 +2030,7 @@ paymentInfoText: {
     color: Colors.textMedium,
   },
   contentCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.primaryLight,
     borderRadius: BorderRadius.lg,
     marginBottom: Spacing.md,
     overflow: 'hidden',
@@ -2670,6 +2672,179 @@ reviewPhoto: {
   borderRadius: 8,
   marginRight: 8,
 },
+
+// ================= ARTISAN PROFILE  ===================
+artisanHeaderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+    
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  coverPhoto: {
+    width: '100%',
+    height: 200,
+  },
+  shopHeader: {
+    flexDirection: 'row',
+    padding: 16,
+    backgroundColor: '#fff',
+    marginBottom: 8,
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginRight: 16,
+  },
+  shopInfo: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  shopName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  ownerName: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 2,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 16,
+    backgroundColor: '#fff',
+    marginBottom: 8,
+  },
+  
+
+  artisanSectionContainer: {
+    backgroundColor: '#fff',
+    padding: 16,
+    marginBottom: 8,
+  },
+
+  viewAllText: {
+    color: '#a0522d',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  descriptionText: {
+    fontSize: 14,
+    color: '#666',
+    lineHeight: 22,
+  },
+  feedbackItem: {
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#eee',
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  
+  policySection: {
+    marginBottom: 16,
+  },
+  policySubtitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 8,
+  },
+  policyText: {
+    fontSize: 14,
+    color: '#666',
+    lineHeight: 20,
+  },
+  contactItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  contactText: {
+    fontSize: 14,
+    color: '#666',
+    marginLeft: 12,
+  },
+  askButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FAECE0',
+    padding: 12,
+    borderRadius: 8,
+  },
+  askButtonText: {
+    color: '#a0522d',
+    fontSize: 16,
+    fontWeight: '500',
+    marginLeft: 8,
+  },
+
+  submitButton: {
+    backgroundColor: '#a0522d',
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  submitButtonDisabled: {
+    backgroundColor: '#ccc',
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  // ================= ARTISAN PROFILE FILTERS ===================
+  filterContainer: {
+    backgroundColor: '#fff',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  filterTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 8,
+  },
+  filterScroll: {
+    flexGrow: 0,
+  },
+  filterButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#a0522d',
+    marginRight: 8,
+  },
+  filterButtonActive: {
+    backgroundColor: '#a0522d',
+  },
+  filterText: {
+    color: '#a0522d',
+    fontSize: 14,
+  },
+  filterTextActive: {
+    color: '#fff',
+  },
 
 });
 

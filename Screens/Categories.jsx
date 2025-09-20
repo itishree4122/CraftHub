@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppStyles from './StyleSheet/AppStyles';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'react-native';
 
 const Categories = ({ navigation }) => {
   // Odisha handicraft categories
@@ -248,10 +250,15 @@ const Categories = ({ navigation }) => {
 
   return (
     <View style={AppStyles.container}>
-      <View style={AppStyles.headerContainer}>
+      <SafeAreaView edges={['top']} style={AppStyles.safeArea} >
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+        <View style={AppStyles.headerContainer}>
         <Text style={[AppStyles.profileHeaderTitle, { fontSize: 22 }]}>Odisha Handicrafts</Text>
         
       </View>
+      </SafeAreaView>
+      {/* Header */}
+      
 
       <ScrollView style={AppStyles.profileContent}>
         {/* Categories Filter */}

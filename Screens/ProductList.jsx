@@ -14,6 +14,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppStyles from './StyleSheet/AppStyles';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -227,7 +229,9 @@ const ProductList = ({ route, navigation }) => {
   return (
     <View style={AppStyles.container}>
       {/* Header */}
-      <View style={AppStyles.headerContainer}>
+      <SafeAreaView edges={['top']} style={AppStyles.safeArea} >
+        <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+        <View style={AppStyles.headerContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 4 }}>
             <Icon name="arrow-back" size={24} color="#333" />
@@ -240,6 +244,10 @@ const ProductList = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
+      </SafeAreaView>
+      
+        
+      
 
       {/* Results Count */}
       <View style={{ backgroundColor: '#fff', padding: 12, borderBottomWidth: 1, borderBottomColor: '#f0f0f0' }}>
@@ -249,6 +257,7 @@ const ProductList = ({ route, navigation }) => {
       </View>
 
       {/* Product List */}
+      <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
       <FlatList
         data={sortedProducts}
         renderItem={renderProductItem}
@@ -266,7 +275,7 @@ const ProductList = ({ route, navigation }) => {
           </View>
         }
       />
-
+      </SafeAreaView>
       <FilterModal />
     </View>
   );

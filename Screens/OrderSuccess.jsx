@@ -5,9 +5,12 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  StatusBar,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppStyles from './StyleSheet/AppStyles';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 const OrderSuccess = ({ navigation, route }) => {
   const { orderDetails } = route.params;
@@ -34,6 +37,8 @@ const OrderSuccess = ({ navigation, route }) => {
   return (
     <View style={AppStyles.container}>
       {/* Header */}
+      <SafeAreaView edges={['top']} >
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <View style={AppStyles.headerContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <TouchableOpacity onPress={() => navigation.navigate('MainTabs')} style={{ padding: 4 }}>
@@ -45,6 +50,7 @@ const OrderSuccess = ({ navigation, route }) => {
           <View style={{ width: 24 }} />
         </View>
       </View>
+      </SafeAreaView>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Success Message */}
@@ -113,6 +119,7 @@ const OrderSuccess = ({ navigation, route }) => {
         </View>
 
         {/* Action Buttons */}
+        <SafeAreaView edges={['bottom']} >
         <View style={[AppStyles.productDetailsContainer, { flexDirection: 'row', justifyContent: 'space-between' }]}>
           <TouchableOpacity 
             style={[AppStyles.secondaryButton, { flex: 1, marginRight: 8 }]}
@@ -127,6 +134,7 @@ const OrderSuccess = ({ navigation, route }) => {
             <Text style={AppStyles.primaryButtonText}>Continue Shopping</Text>
           </TouchableOpacity>
         </View>
+        </SafeAreaView>
       </ScrollView>
     </View>
   );

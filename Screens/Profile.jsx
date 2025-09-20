@@ -1,17 +1,23 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 import AppStyles from './StyleSheet/AppStyles';
 
 const Profile = () => {
     const navigation = useNavigation();
   return (
-    <View style={AppStyles.container}>
+    
+      <View style={AppStyles.container}>
+        <SafeAreaView edges={['top']} style={AppStyles.safeArea}>
+          <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       {/* Header with back button if needed */}
       <View style={AppStyles.profileHeader}>
         <Text style={AppStyles.profileHeaderTitle}>Profile</Text>
       </View>
+      </SafeAreaView>
       
       <ScrollView style={AppStyles.profileContent}>
         {/* Logo and Welcome Section */}
@@ -67,6 +73,12 @@ const Profile = () => {
             <Text style={AppStyles.optionText}>Payment Methods</Text>
             <Icon name="keyboard-arrow-right" size={24} color="#888" />
           </TouchableOpacity>
+
+          <TouchableOpacity style={AppStyles.accountOption} onPress={() => navigation.navigate('SellerInfo')}>
+            <Icon name="storefront" size={24} color="#333" />
+            <Text style={AppStyles.optionText}>Become a Seller</Text>
+            <Icon name="keyboard-arrow-right" size={24} color="#888" />
+          </TouchableOpacity>
         </View>
 
         {/* Support Section */}
@@ -93,6 +105,8 @@ const Profile = () => {
         </View>
       </ScrollView>
     </View>
+   
+    
   );
 };
 

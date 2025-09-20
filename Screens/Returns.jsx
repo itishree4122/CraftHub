@@ -9,6 +9,8 @@ import {
   Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'react-native';
 import AppStyles from './StyleSheet/AppStyles';
 
 const Returns = ({ navigation }) => {
@@ -288,7 +290,9 @@ const Returns = ({ navigation }) => {
   return (
     <View style={AppStyles.container}>
       {/* Header */}
-      <View style={AppStyles.headerContainer}>
+      <SafeAreaView edges={['top']} style={AppStyles.safeArea}>
+        <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+        <View style={AppStyles.headerContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 4 }}>
             <Icon name="arrow-back" size={24} color="#333" />
@@ -299,6 +303,8 @@ const Returns = ({ navigation }) => {
           <View style={{ width: 24 }} />
         </View>
       </View>
+      </SafeAreaView>
+      
 
       {returns.length === 0 ? (
         <View style={AppStyles.emptyCartContainer}>
@@ -309,13 +315,15 @@ const Returns = ({ navigation }) => {
           </Text>
         </View>
       ) : (
+        <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
         <FlatList
           data={returns}
           renderItem={renderReturnItem}
           keyExtractor={item => item.id}
-          contentContainerStyle={AppStyles.returnsContainer}
+          contentContainerStyle={[AppStyles.returnsContainer]}
           showsVerticalScrollIndicator={false}
         />
+        </SafeAreaView>
       )}
 
       {/* Tracking Modal */}

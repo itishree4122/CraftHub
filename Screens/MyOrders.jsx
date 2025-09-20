@@ -16,6 +16,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppStyles from './StyleSheet/AppStyles';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'react-native';
 
 // For Android, we'll use a custom modal for image selection
 const MyOrders = ({ navigation }) => {
@@ -416,7 +418,9 @@ const MyOrders = ({ navigation }) => {
   return (
     <View style={AppStyles.container}>
       {/* Header */}
-      <View style={AppStyles.headerContainer}>
+      <SafeAreaView edges={['top','bottom']} style={AppStyles.safeArea}>
+        <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+        <View style={AppStyles.headerContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 4 }}>
             <Icon name="arrow-back" size={24} color="#333" />
@@ -427,6 +431,8 @@ const MyOrders = ({ navigation }) => {
           <View style={{ width: 24 }} />
         </View>
       </View>
+      </SafeAreaView>
+      
 
       {orders.length === 0 ? (
         <View style={AppStyles.emptyCartContainer}>
@@ -443,13 +449,15 @@ const MyOrders = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       ) : (
+        <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
         <FlatList
           data={orders}
           renderItem={renderOrderItem}
           keyExtractor={item => item.id}
-          contentContainerStyle={AppStyles.ordersContainer}
+          contentContainerStyle={[AppStyles.ordersContainer]}
           showsVerticalScrollIndicator={false}
         />
+        </SafeAreaView>
       )}
 
       {/* Tracking Modal */}
@@ -640,6 +648,7 @@ const MyOrders = ({ navigation }) => {
         </TouchableOpacity>
       </Modal>
     </View>
+    
   );
 };
 

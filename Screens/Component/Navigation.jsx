@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -22,6 +23,7 @@ import ArtisanProfile from '../ArtisanProfile';
 import ArtisanBlog from '../ArtisanBlog';
 import OrderSuccess from '../OrderSuccess';
 import VideoPlayer from '../VideoPlayer';
+import SellerInfo from '../SellerInfo';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -54,6 +56,8 @@ const BottomTabs = () => (
 const Navigation = () => {
   return (
     <NavigationContainer>
+      {/* 👇 SafeAreaView wraps the entire stack */}
+      {/* <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}> */}
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {/* Main tab navigation */}
         <Stack.Screen name="MainTabs" component={BottomTabs} />
@@ -70,10 +74,12 @@ const Navigation = () => {
         <Stack.Screen name="ArtisanProfile" component={ArtisanProfile} />
         <Stack.Screen name="ArtisanBlog" component={ArtisanBlog} />
         <Stack.Screen name="OrderSuccess" component={OrderSuccess} />
+        <Stack.Screen name="SellerInfo" component={SellerInfo} />
         {/* Add VideoPlayer as a stack screen for navigation from other screens */}
         <Stack.Screen name="VideoPlayer" component={VideoPlayer} />
 
       </Stack.Navigator>
+      {/* </SafeAreaView> */}
     </NavigationContainer>
   );
 };

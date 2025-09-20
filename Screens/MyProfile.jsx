@@ -11,7 +11,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppStyles from './StyleSheet/AppStyles';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'react-native';
 const MyProfile = ({ navigation }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -115,10 +116,15 @@ const MyProfile = ({ navigation }) => {
 
   return (
     <View style={AppStyles.container}>
-      <View style={AppStyles.profileHeader}>
+       <SafeAreaView edges={['top','bottom']} style={AppStyles.safeArea}>
+        <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+           <View style={AppStyles.profileHeader}>
         <Text style={AppStyles.profileHeaderTitle}>My Profile</Text>
         <View style={AppStyles.headerSpacer} />
       </View>
+        </SafeAreaView>
+
+      
       
       <ScrollView style={AppStyles.profileContent}>
         <View style={AppStyles.accountSection}>
@@ -278,6 +284,7 @@ const MyProfile = ({ navigation }) => {
       </ScrollView>
 
       {/* Submit Button */}
+      <SafeAreaView edges={['bottom']} style={AppStyles.safeArea} >
           <View style={{ paddingLeft: 16, paddingRight: 16,paddingBottom: 16,paddingTop: -5, backgroundColor: '#fff', borderTopWidth: 1, borderTopColor: '#e0e0e0' }}>
         <TouchableOpacity 
           style={AppStyles.signupButton}
@@ -286,6 +293,7 @@ const MyProfile = ({ navigation }) => {
           <Text style={AppStyles.signupButtonText}>Save Profile</Text>
         </TouchableOpacity>
       </View>
+      </SafeAreaView>
     </View>
   );
 };

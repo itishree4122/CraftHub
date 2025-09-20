@@ -4,10 +4,12 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LinearGradient from 'react-native-linear-gradient'; // Import gradient
 import AppStyles from '../StyleSheet/AppStyles';
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 
 const Header = ({ userAddress, onSearch, onAddressPress }) => {
   const navigation = useNavigation();
-
+  const insets = useSafeAreaInsets();
   const handleSearchPress = () => {
     navigation.navigate('Search');
   };
@@ -17,7 +19,7 @@ const Header = ({ userAddress, onSearch, onAddressPress }) => {
       colors={['#D18F71', '#8B4513']} // Gradient shades (you can tweak)
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
-      style={AppStyles.headerContainer} // keep your container styles
+      style={[AppStyles.headerContainer, { paddingTop: insets.top }]} // keep your container styles
     >
       {/* User Address */}
       <TouchableOpacity onPress={onAddressPress} style={AppStyles.addressContainer}>

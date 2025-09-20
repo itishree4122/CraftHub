@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity, FlatList, Dimensions, Modal } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, ScrollView, Image, TouchableOpacity, FlatList, Dimensions, Modal, StatusBar } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AppStyles from './StyleSheet/AppStyles';
 
@@ -308,13 +308,13 @@ const ArtisanBlog = ({ navigation, route }) => {
   );
 
   return (
-    <View style={[AppStyles.artisanBlogContainer, { 
-      paddingTop: insets.top,
-      paddingBottom: insets.bottom,
-      paddingLeft: insets.left,
-      paddingRight: insets.right 
+    <View style={[AppStyles.container, { 
+      
     }]}>
       {/* Custom Header Section */}
+      <SafeAreaView edges={['top']}  >
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      
       <View style={AppStyles.headerContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 8, marginRight: 16 }}>
@@ -328,6 +328,8 @@ const ArtisanBlog = ({ navigation, route }) => {
           <Text style={AppStyles.searchInput}>Search stories...</Text>
         </View>
       </View>
+      </SafeAreaView>
+      
       
       <ScrollView style={AppStyles.artisanBlogContent}>
         {/* Suggested Artisans Section */}
@@ -364,12 +366,14 @@ const ArtisanBlog = ({ navigation, route }) => {
         {/* Content Feed Section */}
         <View style={AppStyles.sectionContainer}>
           <Text style={AppStyles.sectionTitle}>Popular Stories</Text>
+          <SafeAreaView edges={['bottom']} >
           <FlatList
             data={contentFeed}
             renderItem={renderContentItem}
             keyExtractor={item => item.id.toString()}
             showsVerticalScrollIndicator={false}
           />
+          </SafeAreaView>
         </View>
       </ScrollView>
 
